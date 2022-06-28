@@ -6,19 +6,16 @@ metadata:
 data:
   fio.job: |-
     [global]
-    ioengine=psync
+    name=fio-seq-write
+    filename=fio-seq-write
+    rw=write
+    bs=16K
     direct=1
-    buffered=0
+    numjobs=4
+    time_based
+    runtime=900
+
+    [file1]
     size=10G
-    iodepth=1000
-    numjobs=100
-    group_reporting
-    refill_buffers
-    rwmixread=80
-    norandommap
-    randrepeat=0
-    percentage_random=0
-    bs=512K
-    buffer_compress_percentage=50
-    rw=read
-    [testjob]
+    ioengine=libaio
+    iodepth=16

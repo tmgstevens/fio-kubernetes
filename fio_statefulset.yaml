@@ -28,13 +28,29 @@ spec:
       - name: fio-config-vol
         configMap:
           name: fio-job-config
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      nodeSelector:
+        redpanda-node: "true"
+      tolerations:
+      - effect: NoSchedule
+        key: redpanda-node
+        operator: Equal
+        value: "true"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: fio
   volumeClaimTemplates:
   - metadata:
       name: fio-data
     spec:
-      storageClassName: pure-block
+      storageClassName: local-path
       accessModes:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 4Ti
+          storage: 100Gi
